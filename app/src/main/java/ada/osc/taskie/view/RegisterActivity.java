@@ -1,6 +1,8 @@
 package ada.osc.taskie.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
@@ -68,6 +70,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void startLoginActivity() {
+        //if this function starts, that means that hes registered, so we save that in prefs
+        SharedPreferences prefs = this.getSharedPreferences(
+                getPackageName(), Context.MODE_PRIVATE);
+        prefs.edit().putBoolean(getString(R.string.isRegisteredKey),true).apply();
+
         Intent intent = new Intent();
         intent.setClass(this, LoginActivity.class);
         startActivity(intent);

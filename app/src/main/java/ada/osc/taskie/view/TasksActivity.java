@@ -47,11 +47,6 @@ public class TasksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
 
-        //if user enters to this activity, that means that hes registered, so we save that in prefs
-        SharedPreferences prefs = this.getSharedPreferences(
-                getPackageName(), Context.MODE_PRIVATE);
-        prefs.edit().putBoolean(getString(R.string.isRegisteredKey),true).apply();
-
         ButterKnife.bind(this);
         adapter = new TasksPagerAdapter(getSupportFragmentManager());
 

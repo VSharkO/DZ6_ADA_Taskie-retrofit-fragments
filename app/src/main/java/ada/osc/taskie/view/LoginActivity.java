@@ -36,6 +36,17 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mContext = this;
         ButterKnife.bind(this);
+
+        //This is first activity that starts,so we check if user is registered, and if is not,
+        //starts register activity, else - we stay on this activity
+        SharedPreferences prefs = this.getSharedPreferences(
+                getPackageName(), Context.MODE_PRIVATE);
+
+        if(!prefs.getBoolean(getString(R.string.isRegisteredKey),false)){
+            Intent intent = new Intent(this, RegisterActivity.class);
+            finish();
+            startActivity(intent);
+        }
     }
 
     @OnClick(R.id.button_login)
