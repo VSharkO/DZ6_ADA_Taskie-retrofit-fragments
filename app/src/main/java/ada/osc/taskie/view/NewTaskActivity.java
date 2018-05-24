@@ -1,5 +1,6 @@
 package ada.osc.taskie.view;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,6 +27,7 @@ public class NewTaskActivity extends AppCompatActivity {
 	@BindView(R.id.edittext_newtask_title)	EditText mTitleEntry;
 	@BindView(R.id.edittext_newtask_description) EditText mDescriptionEntry;
 	@BindView(R.id.spinner_newtask_priority) Spinner mPriorityEntry;
+	public MyViewModel model;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class NewTaskActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_new_task);
 		ButterKnife.bind(this);
 		setUpSpinnerSource();
+		model = ViewModelProviders.of(this).get(MyViewModel.class);
 	}
 
 	private void setUpSpinnerSource() {
@@ -57,6 +60,7 @@ public class NewTaskActivity extends AppCompatActivity {
 	}
 
 	private void createNewNote(Task taskToSave) {
+		model.setNewTask(taskToSave);
 		Retrofit retrofit = RetrofitUtil.createRetrofit();
 		ApiService apiService = retrofit.create(ApiService.class);
 

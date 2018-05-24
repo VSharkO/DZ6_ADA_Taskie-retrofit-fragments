@@ -1,5 +1,6 @@
 package ada.osc.taskie.view.fragments;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,20 +17,11 @@ import java.util.List;
 
 import ada.osc.taskie.R;
 import ada.osc.taskie.model.Task;
-import ada.osc.taskie.model.TaskList;
-import ada.osc.taskie.networking.ApiService;
-import ada.osc.taskie.networking.RetrofitUtil;
-import ada.osc.taskie.util.SharedPrefsUtil;
+import ada.osc.taskie.view.MyViewModel;
 import ada.osc.taskie.view.TaskAdapter;
 import ada.osc.taskie.view.TaskClickListener;
-import ada.osc.taskie.view.TasksActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class AllTasksFragment extends Fragment {
 
@@ -37,7 +29,7 @@ public class AllTasksFragment extends Fragment {
     RecyclerView tasks;
 
     private TaskAdapter taskAdapter;
-
+    public MyViewModel model;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -48,15 +40,19 @@ public class AllTasksFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setItemAnimator(new DefaultItemAnimator());
-
+        model = ViewModelProviders.of(this).get(MyViewModel.class);
+        model.getTasks().observe(this, tasks -> {
+            // update UI
+            updateTasksDisplay(tasks);
+        });
 
         taskAdapter = new TaskAdapter(new TaskClickListener() {
             @Override
             public void onClick(Task task) {
             toastTask(task);
+
             }
 
             @Override
@@ -64,65 +60,14 @@ public class AllTasksFragment extends Fragment {
 
             }
 
-            public void onFavoriteClick(Task task){
-                setFavorite(task);
+            public void onFavoriteClick(Task task) {
+                model.setFavoriteOnServer(task);
+                updateTasksDisplay( model.getTasksLocal());
+
             }
-        });
+            },false);
 
         tasks.setAdapter(taskAdapter);
-
-        getTasksFromServer();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getTasksFromServer();
-    }
-
-    private void getTasksFromServer() {
-        Retrofit retrofit = RetrofitUtil.createRetrofit();
-        ApiService apiService = retrofit.create(ApiService.class);
-
-        Call<TaskList> taskListCall = apiService
-                .getTasks(SharedPrefsUtil.getPreferencesField(getActivity()
-                        , SharedPrefsUtil.TOKEN));
-
-        taskListCall.enqueue(new Callback<TaskList>() {
-            @Override
-            public void onResponse(Call<TaskList> call, Response<TaskList> response) {
-                if (response.isSuccessful()) {
-                    updateTasksDisplay(response.body().mTaskList);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<TaskList> call, Throwable t) {
-
-            }
-        });
-    }
-
-    public void setFavorite(Task setFavoriteTask) {
-        Retrofit retrofit = RetrofitUtil.createRetrofit();
-        ApiService apiService = retrofit.create(ApiService.class);
-        Call postFavoriteTaskCall = apiService
-                .postFavoriteTask(SharedPrefsUtil.getPreferencesField(getActivity()
-                        , SharedPrefsUtil.TOKEN), setFavoriteTask.getmId());
-
-        postFavoriteTaskCall.enqueue(new Callback() {
-
-            @Override
-            public void onResponse(Call call, Response response) {
-                if (response.isSuccessful()) {
-                    getTasksFromServer();
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-            }
-        });
     }
 
     private void toastTask(Task task) {
@@ -139,5 +84,4 @@ public class AllTasksFragment extends Fragment {
             Log.d("taskovi", t.getTitle());
         }
     }
-
 }

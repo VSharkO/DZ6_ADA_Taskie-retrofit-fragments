@@ -22,10 +22,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
 	private List<Task> mTasks;
 	private TaskClickListener mListener;
+	private boolean isFavoriteFragment=false;
+	private int resForTaskLayout;
 
-	public TaskAdapter(TaskClickListener listener) {
+	public TaskAdapter(TaskClickListener listener, boolean isFavoriteFragment) {
 		mListener = listener;
 		mTasks = new ArrayList<>();
+		if(isFavoriteFragment) {
+		    this.isFavoriteFragment=true;
+			resForTaskLayout=R.layout.favorite_item_task;
+        }else{
+			resForTaskLayout=R.layout.item_task;
+		}
 	}
 
 	public void updateTasks(List<Task> tasks){
@@ -38,7 +46,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 	@Override
 	public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 		View itemView = LayoutInflater.from(parent.getContext())
-				.inflate(R.layout.item_task, parent, false);
+				.inflate(resForTaskLayout, parent, false);
 		return new TaskViewHolder(itemView, mListener);
 	}
 
@@ -86,9 +94,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 			return true;
 		}
 
+
 		@OnClick({R.id.checkbox_isFavorite})
 		public void onFavoriteClick(){
-			mListener.onFavoriteClick(mTasks.get(getAdapterPosition()));
+		    if(!isFavoriteFragment)
+		    mListener.onFavoriteClick(mTasks.get(getAdapterPosition()));
 		}
 	}
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -28,14 +27,16 @@
         android:layout_toStartOf="@+id/checkbox_isFavorite"
         android:layout_below="@id/textview_task_title"
         android:textSize="@dimen/textSize_normal"/>
-
     <CheckBox
         android:id="@+id/checkbox_isFavorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/imageview_task_priority"
         android:layout_toStartOf="@id/imageview_task_priority"
-        android:checked="false"
+        android:layout_centerVertical="true"
+        android:checked="true"
+        android:contextClickable="false"
+        android:enabled="false"
         />
+
 </RelativeLayout>

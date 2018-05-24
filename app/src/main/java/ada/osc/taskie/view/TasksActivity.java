@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -57,8 +58,6 @@ public class TasksActivity extends AppCompatActivity {
         adapter.setItems(pages);
         viewPager.setAdapter(adapter);
     }
-
-
 
     @OnClick(R.id.fab_tasks_addNew)
     public void startNewTaskActivity() {
