@@ -23,6 +23,8 @@ import ada.osc.taskie.view.TaskClickListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+//napraviti da se task doda odmah kada se stvori.
+
 public class AllTasksFragment extends Fragment {
 
     @BindView(R.id.tasks)
@@ -42,9 +44,8 @@ public class AllTasksFragment extends Fragment {
         ButterKnife.bind(this, view);
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setItemAnimator(new DefaultItemAnimator());
-        model = ViewModelProviders.of(this).get(MyViewModel.class);
+        model = ViewModelProviders.of(getActivity()).get(MyViewModel.class);
         model.getTasks().observe(this, tasks -> {
-            // update UI
             updateTasksDisplay(tasks);
         });
 
@@ -61,8 +62,6 @@ public class AllTasksFragment extends Fragment {
             }
 
             public void onFavoriteClick(Task task) {
-                model.setFavoriteOnServer(task);
-                updateTasksDisplay( model.getTasksLocal());
 
             }
             },false);

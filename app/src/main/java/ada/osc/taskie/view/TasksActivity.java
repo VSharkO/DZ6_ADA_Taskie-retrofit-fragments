@@ -1,5 +1,6 @@
 package ada.osc.taskie.view;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,9 +38,10 @@ public class TasksActivity extends AppCompatActivity {
     private static final int REQUEST_NEW_TASK = 10;
     @BindView(R.id.fab_tasks_addNew)
     FloatingActionButton mNewTask;
-
     @BindView(R.id.fragmentContainer)
     ViewPager viewPager;
+
+    MyViewModel model;
 
     private TasksPagerAdapter adapter;
 
@@ -47,6 +49,8 @@ public class TasksActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
+        model = ViewModelProviders.of(this).get(MyViewModel.class);
+
 
         ButterKnife.bind(this);
         adapter = new TasksPagerAdapter(getSupportFragmentManager());
@@ -57,6 +61,12 @@ public class TasksActivity extends AppCompatActivity {
 
         adapter.setItems(pages);
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        onResumeFragments();
     }
 
     @OnClick(R.id.fab_tasks_addNew)

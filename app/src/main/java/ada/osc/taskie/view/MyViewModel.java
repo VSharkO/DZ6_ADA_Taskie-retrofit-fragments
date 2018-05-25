@@ -147,6 +147,6 @@ public class MyViewModel extends AndroidViewModel {
 
     public void setNewTask(Task taskToSave) {
         tasksLocal.add(taskToSave);
-        tasks.setValue(tasksLocal);
+        tasks.setValue(getTasksLocal());
     }
 }

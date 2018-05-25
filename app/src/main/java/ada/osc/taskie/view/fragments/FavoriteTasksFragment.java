@@ -44,7 +44,7 @@ public class FavoriteTasksFragment extends Fragment {
         tasks.setLayoutManager(new LinearLayoutManager(getActivity()));
         tasks.setItemAnimator(new DefaultItemAnimator());
 
-        model = ViewModelProviders.of(this).get(MyViewModel.class);
+        model = ViewModelProviders.of(getActivity()).get(MyViewModel.class);
         model.getFavoriteTasks().observe(this, tasks -> {
             // update UI
             updateTasksDisplay(tasks);
