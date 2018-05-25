@@ -21,6 +21,7 @@ import ada.osc.taskie.networking.ApiService;
 import ada.osc.taskie.networking.RetrofitUtil;
 import ada.osc.taskie.persistance.TaskRepository;
 import ada.osc.taskie.model.Task;
+import ada.osc.taskie.util.AppStatus;
 import ada.osc.taskie.util.SharedPrefsUtil;
 import ada.osc.taskie.view.fragments.AllTasksFragment;
 import ada.osc.taskie.view.fragments.FavoriteTasksFragment;
@@ -69,7 +70,13 @@ public class TasksActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK) {
             Task newTask = (Task) data.getSerializableExtra("newTask");
-            model.setNewTask(newTask);
+            if (AppStatus.getInstance(getApplicationContext()).isOnline()) {
+                model.setNewTask(newTask);
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "Ooops! No WiFi/Mobile Networks Connected!", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 }
