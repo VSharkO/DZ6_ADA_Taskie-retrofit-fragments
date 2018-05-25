@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -77,6 +78,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 		@BindView(R.id.textview_task_title) TextView mTitle;
 		@BindView(R.id.textview_task_description) TextView mDescription;
 		@BindView(R.id.imageview_task_priority) ImageView mPriority;
+		@BindView(R.id.checkbox_isFavorite) CheckBox mIsFavorite;
 
 		public TaskViewHolder(View itemView, TaskClickListener listener) {
 			super(itemView);
@@ -97,8 +99,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
 		@OnClick({R.id.checkbox_isFavorite})
 		public void onFavoriteClick(){
-		    if(!isFavoriteFragment)
 		    mListener.onFavoriteClick(mTasks.get(getAdapterPosition()));
+			if (mIsFavorite.isChecked()) {
+				mIsFavorite.setChecked(false);
+			}
+			else {
+				mIsFavorite.setChecked(true);
+			}
 		}
 	}
 }

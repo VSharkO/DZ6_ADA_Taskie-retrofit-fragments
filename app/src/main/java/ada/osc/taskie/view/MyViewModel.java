@@ -31,7 +31,7 @@ public class MyViewModel extends AndroidViewModel {
         super(application);
         if(tasksLocal == null)
         getTasks();
-        if(getFavoriteTasksLocal()==null)
+        if(favoriteTasks==null)
         getFavoriteTasks();
     }
 
@@ -104,9 +104,7 @@ public class MyViewModel extends AndroidViewModel {
         }
 
     public void setFavoriteOnServer(Task setFavoriteTask) {
-
         setFavoriteLocal(setFavoriteTask);
-
         Retrofit retrofit = RetrofitUtil.createRetrofit();
         ApiService apiService = retrofit.create(ApiService.class);
         Call postFavoriteTaskCall = apiService
@@ -130,23 +128,39 @@ public class MyViewModel extends AndroidViewModel {
         });
     }
 
-    private void setFavoriteLocal(Task setFavoriteTask) {
-        favoriteTaskLocal.add(setFavoriteTask);
-        tasksLocal.remove(setFavoriteTask);
-        tasks.setValue(tasksLocal);
-        favoriteTasks.setValue(favoriteTaskLocal);
-    }
-
-    public List<Task> getTasksLocal() {
-        return tasksLocal;
-    }
-
-    public List<Task> getFavoriteTasksLocal() {
-        return favoriteTaskLocal;
-    }
+        private void setFavoriteLocal(Task setFavoriteTask) {
+            favoriteTaskLocal.add(setFavoriteTask);
+            tasksLocal.remove(setFavoriteTask);
+            tasks.setValue(tasksLocal);
+            favoriteTasks.setValue(favoriteTaskLocal);
+        }
 
     public void setNewTask(Task taskToSave) {
         tasksLocal.add(taskToSave);
-        tasks.setValue(getTasksLocal());
+        tasks.setValue(tasksLocal);
     }
+
+    public void createNewTaskOnServer(Task taskToSave) {
+        Retrofit retrofit = RetrofitUtil.createRetrofit();
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call postNewTaskCall = apiService
+                .postNewTask(SharedPrefsUtil.getPreferencesField(getApplication()
+                        , SharedPrefsUtil.TOKEN), taskToSave);
+
+        postNewTaskCall.enqueue(new Callback() {
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (response.isSuccessful()) {
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+            }
+        });
+
+    }
+
 }

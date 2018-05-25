@@ -29,11 +29,11 @@ public class AllTasksFragment extends Fragment {
 
     @BindView(R.id.tasks)
     RecyclerView tasks;
-
     private TaskAdapter taskAdapter;
     public MyViewModel model;
     @Nullable
     @Override
+
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_tasks, container, false);
     }
@@ -53,7 +53,6 @@ public class AllTasksFragment extends Fragment {
             @Override
             public void onClick(Task task) {
             toastTask(task);
-
             }
 
             @Override
@@ -62,6 +61,7 @@ public class AllTasksFragment extends Fragment {
             }
 
             public void onFavoriteClick(Task task) {
+                model.setFavoriteOnServer(task);
 
             }
             },false);
@@ -77,10 +77,11 @@ public class AllTasksFragment extends Fragment {
         ).show();
     }
 
-    private void updateTasksDisplay(List<Task> taskList) {
+    public void updateTasksDisplay(List<Task> taskList) {
         taskAdapter.updateTasks(taskList);
         for (Task t : taskList) {
             Log.d("taskovi", t.getTitle());
         }
     }
+
 }
