@@ -17,6 +17,7 @@ import java.util.List;
 
 import ada.osc.taskie.R;
 import ada.osc.taskie.model.Task;
+import ada.osc.taskie.util.AppStatus;
 import ada.osc.taskie.view.MyViewModel;
 import ada.osc.taskie.view.TaskAdapter;
 import ada.osc.taskie.view.TaskClickListener;
@@ -57,11 +58,26 @@ public class AllTasksFragment extends Fragment {
 
             @Override
             public void onLongClick(Task task) {
+                if (AppStatus.getInstance(getActivity().getApplicationContext()).isOnline()) {
+                    model.deleteTask(task);
+                    updateTasksDisplay(model.getTasksLocal());
+                } else {
+
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Ooops! No WiFi/Mobile Networks Connected!", Toast.LENGTH_SHORT).show();
+                }
 
             }
 
             public void onFavoriteClick(Task task) {
-                model.setFavoriteOnServer(task);
+                if (AppStatus.getInstance(getActivity().getApplicationContext()).isOnline()) {
+                    model.setFavoriteOnServer(task);
+                } else {
+
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Ooops! No WiFi/Mobile Networks Connected!", Toast.LENGTH_SHORT).show();
+                }
+
 
             }
             },false);

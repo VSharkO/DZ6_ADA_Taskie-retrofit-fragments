@@ -6,12 +6,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import ada.osc.taskie.R;
 import ada.osc.taskie.model.LoginResponse;
 import ada.osc.taskie.model.RegistrationToken;
 import ada.osc.taskie.networking.ApiService;
 import ada.osc.taskie.networking.RetrofitUtil;
+import ada.osc.taskie.util.AppStatus;
 import ada.osc.taskie.util.SharedPrefsUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,7 +53,13 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.button_login)
     void onLoginButtonClick(){
-        loginUser();
+        if (AppStatus.getInstance(getApplicationContext()).isOnline()) {
+            loginUser();
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    "Ooops! No WiFi/Mobile Networks Connected!", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @OnClick(R.id.button_register)

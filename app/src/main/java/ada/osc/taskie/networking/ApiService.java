@@ -31,4 +31,8 @@ public interface ApiService {
     @POST("api/note/favorite")
     Call<Task> postFavoriteTask(@Header("authorization") String header,
                                 @Query("id") String id);
+
+    @POST("api/note/delete")
+    Call<Task> deleteTask(@Header("authorization") String header,
+                          @Query("id") String id);
 }

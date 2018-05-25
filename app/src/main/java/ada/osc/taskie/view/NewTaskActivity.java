@@ -7,9 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import ada.osc.taskie.R;
 import ada.osc.taskie.model.Task;
 import ada.osc.taskie.model.TaskPriority;
+import ada.osc.taskie.util.AppStatus;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -49,7 +52,13 @@ public class NewTaskActivity extends AppCompatActivity {
 		TaskPriority priority = (TaskPriority) mPriorityEntry.getSelectedItem();
 
 		Task newTask = new Task(title, description, priority);
-		model.createNewTaskOnServer(newTask);
+		if (AppStatus.getInstance(getApplicationContext()).isOnline()) {
+			model.createNewTaskOnServer(newTask);
+		} else {
+			Toast.makeText(getApplicationContext(),
+					"Ooops! No WiFi/Mobile Networks Connected!", Toast.LENGTH_SHORT).show();
+		}
+
 
 		Intent intent = new Intent();
 		intent.putExtra("newTask", newTask);

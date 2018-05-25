@@ -11,11 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.List;
 
 import ada.osc.taskie.R;
 import ada.osc.taskie.model.Task;
+import ada.osc.taskie.util.AppStatus;
 import ada.osc.taskie.view.MyViewModel;
 import ada.osc.taskie.view.TaskAdapter;
 import ada.osc.taskie.view.TaskClickListener;
@@ -57,6 +59,14 @@ public class FavoriteTasksFragment extends Fragment {
 
             @Override
             public void onLongClick(Task task) {
+                if (AppStatus.getInstance(getActivity().getApplicationContext()).isOnline()) {
+                    model.deleteTask(task);
+                    updateTasksDisplay(model.getFavoriteTaskLocal());
+                } else {
+
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Ooops! No WiFi/Mobile Networks Connected!", Toast.LENGTH_SHORT).show();
+                }
 
             }
 
@@ -68,11 +78,6 @@ public class FavoriteTasksFragment extends Fragment {
 
         tasks.setAdapter(taskAdapter);
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     private void updateTasksDisplay(List<Task> taskList) {

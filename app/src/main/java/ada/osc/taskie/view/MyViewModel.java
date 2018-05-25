@@ -153,6 +153,7 @@ public class MyViewModel extends AndroidViewModel {
             @Override
             public void onResponse(Call call, Response response) {
                 if (response.isSuccessful()) {
+
                 }
             }
 
@@ -163,4 +164,45 @@ public class MyViewModel extends AndroidViewModel {
 
     }
 
+    public void deleteTask(Task taskToDelete) {
+        deleteTaskLocal(taskToDelete);
+        Retrofit retrofit = RetrofitUtil.createRetrofit();
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call postNewTaskCall = apiService
+                .deleteTask(SharedPrefsUtil.getPreferencesField(getApplication()
+                        , SharedPrefsUtil.TOKEN), taskToDelete.getmId());
+
+        postNewTaskCall.enqueue(new Callback() {
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                if (response.isSuccessful()) {
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+            }
+        });
+    }
+
+        private void deleteTaskLocal(Task taskToDelete) {
+        if(tasksLocal.contains(taskToDelete)) {
+            tasksLocal.remove(taskToDelete);
+            tasks.setValue(tasksLocal);
+        }
+        if(favoriteTaskLocal.contains(taskToDelete)) {
+            favoriteTaskLocal.remove(taskToDelete);
+            favoriteTasks.setValue(tasksLocal);
+        }
+        }
+
+    public List<Task> getTasksLocal() {
+        return tasksLocal;
+    }
+
+    public List<Task> getFavoriteTaskLocal() {
+        return favoriteTaskLocal;
+    }
 }
