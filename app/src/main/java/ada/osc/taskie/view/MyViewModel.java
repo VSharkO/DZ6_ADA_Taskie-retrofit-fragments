@@ -26,13 +26,11 @@ public class MyViewModel extends AndroidViewModel {
         private MutableLiveData<List<Task>> favoriteTasks;
         private List<Task> tasksLocal;
         private List<Task> favoriteTaskLocal;
+        private Retrofit retrofit = RetrofitUtil.createRetrofit();
+        private ApiService apiService = retrofit.create(ApiService.class);
 
     public MyViewModel(@NonNull Application application) {
         super(application);
-        if(tasksLocal == null)
-        getTasks();
-        if(favoriteTasks==null)
-        getFavoriteTasks();
     }
 
     public LiveData<List<Task>> getTasks() {
@@ -52,9 +50,6 @@ public class MyViewModel extends AndroidViewModel {
     }
 
         private void loadTasks() {
-
-            Retrofit retrofit = RetrofitUtil.createRetrofit();
-            ApiService apiService = retrofit.create(ApiService.class);
 
             Call<TaskList> taskListCall = apiService
                     .getTasks(SharedPrefsUtil.getPreferencesField(getApplication()
@@ -78,10 +73,6 @@ public class MyViewModel extends AndroidViewModel {
         }
 
         private void loadFavoriteTasks() {
-
-            Retrofit retrofit = RetrofitUtil.createRetrofit();
-            ApiService apiService = retrofit.create(ApiService.class);
-
             Call<TaskList> taskListCall = apiService
                     .getFavoriteTasks(SharedPrefsUtil.getPreferencesField(getApplication()
                             , SharedPrefsUtil.TOKEN));
@@ -105,8 +96,6 @@ public class MyViewModel extends AndroidViewModel {
 
     public void setFavoriteOnServer(Task setFavoriteTask) {
         setFavoriteLocal(setFavoriteTask);
-        Retrofit retrofit = RetrofitUtil.createRetrofit();
-        ApiService apiService = retrofit.create(ApiService.class);
         Call postFavoriteTaskCall = apiService
                 .postFavoriteTask(SharedPrefsUtil.getPreferencesField(getApplication()
                         , SharedPrefsUtil.TOKEN), setFavoriteTask.getmId());
@@ -141,9 +130,6 @@ public class MyViewModel extends AndroidViewModel {
     }
 
     public void createNewTaskOnServer(Task taskToSave) {
-        Retrofit retrofit = RetrofitUtil.createRetrofit();
-        ApiService apiService = retrofit.create(ApiService.class);
-
         Call postNewTaskCall = apiService
                 .postNewTask(SharedPrefsUtil.getPreferencesField(getApplication()
                         , SharedPrefsUtil.TOKEN), taskToSave);
@@ -166,9 +152,6 @@ public class MyViewModel extends AndroidViewModel {
 
     public void deleteTask(Task taskToDelete) {
         deleteTaskLocal(taskToDelete);
-        Retrofit retrofit = RetrofitUtil.createRetrofit();
-        ApiService apiService = retrofit.create(ApiService.class);
-
         Call postNewTaskCall = apiService
                 .deleteTask(SharedPrefsUtil.getPreferencesField(getApplication()
                         , SharedPrefsUtil.TOKEN), taskToDelete.getmId());
